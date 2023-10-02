@@ -40,20 +40,27 @@ data class LogError(
     val tag: String,
     val message: String
 )
-val logErrorAdapter = LogErrorAdapter(logErrors)
+class LogErrorAdapter(private val myDataset: List<Media>) :
+    RecyclerView.Adapter<LogErrorAdapter.MyViewHolder>() {
 
-// Create RecyclerView reference
-val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
+    class MyViewHolder(val textView: TextView) : RecyclerView.ViewHolder(textView)
 
-// Create LayoutManager
-val layoutManager = LinearLayoutManager(this)
-recyclerView.layoutManager = layoutManager
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): LogErrorAdapter.MyViewHolder {
+        val textView = TextView(parent.context)
+        return MyViewHolder(textView)
+    }
 
-// Initialize adapter
-val adapter = LogErrorAdapter(logErrors)
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        holder.textView.text =
+            "Filename: ${myDataset[position].name}, Size: ${myDataset[position].size}, Location: ${myDataset[position].data}"
+    }
 
-// Set adapter on RecyclerView
-recyclerView.adapter = adapter
+    override fun getItemCount() = myDataset.size
+}
+
 fun logError(tag: String, message: String) {
     val timestamp = System.currentTimeMillis()
     logErrors.add(LogError(timestamp, tag, message))
@@ -102,6 +109,13 @@ class MainActivity : AppCompatActivity() {
         } else {
             // If loginName and appPassword do not exist, show the main page
             setContentView(R.layout.activity_main)
+
+            // Initialize views
+            val recyclerView = findViewById(R.id.recyclerView)
+            recyclerView.layoutManager = LinearLayoutManager(this)
+
+            val adapter = LogErrorAdapter(logErrors)
+            recyclerView.adapter = adapter
 
             val connectButton: Button = findViewById(R.id.connectButton)
             connectButton.setOnClickListener {
@@ -409,26 +423,7 @@ class ConnectedActivity : AppCompatActivity() {
 
 }
 
-class LogErrorAdapter(private val myDataset: List<Media>) :
-    RecyclerView.Adapter<LogErrorAdapter.MyViewHolder>() {
 
-    class MyViewHolder(val textView: TextView) : RecyclerView.ViewHolder(textView)
-
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): LogErrorAdapter.MyViewHolder {
-        val textView = TextView(parent.context)
-        return MyViewHolder(textView)
-    }
-
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.textView.text =
-            "Filename: ${myDataset[position].name}, Size: ${myDataset[position].size}, Location: ${myDataset[position].data}"
-    }
-
-    override fun getItemCount() = myDataset.size
-}
 
 
 
