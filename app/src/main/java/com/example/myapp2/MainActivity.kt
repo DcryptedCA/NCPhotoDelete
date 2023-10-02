@@ -33,32 +33,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.Manifest
-import android.view.View
-
-data class LogError(
-    val timestamp: Long,
-    val tag: String,
-    val message: String
-)
-val logErrorAdapter = LogErrorAdapter(logErrors)
-
-// Create RecyclerView reference
-val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
-
-// Create LayoutManager
-val layoutManager = LinearLayoutManager(this)
-recyclerView.layoutManager = layoutManager
-
-// Initialize adapter
-val adapter = LogErrorAdapter(logErrors)
-
-// Set adapter on RecyclerView
-recyclerView.adapter = adapter
-fun logError(tag: String, message: String) {
-    val timestamp = System.currentTimeMillis()
-    logErrors.add(LogError(timestamp, tag, message))
-    logErrorAdapter.notifyDataSetChanged()
-}
 
 class MainActivity : AppCompatActivity() {
 
@@ -274,18 +248,18 @@ class ConnectedActivity : AppCompatActivity() {
 
             // Permission is not granted
             // Should we show an explanation?
-            logError("Permission", "Requesting permission")
+            Log.d("Permission", "Requesting permission")
             if (ActivityCompat.shouldShowRequestPermissionRationale(
                     this,
                     Manifest.permission.READ_EXTERNAL_STORAGE
                 )
             ) {
-                logError("Permission", "Here 1")
+                Log.d("Permission", "Here 1")
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
             } else {
-                logError("Permission", "Here 2")
+                Log.d("Permission", "Here 2")
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE)
                 // MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE is an
@@ -293,7 +267,7 @@ class ConnectedActivity : AppCompatActivity() {
                 // result of the request.
             }
         } else {
-            logError("Permission", "Here 3")
+            Log.d("Permission", "Here 3")
             // Initialize the database
             val db = Room.databaseBuilder(
                 applicationContext,
@@ -308,7 +282,7 @@ class ConnectedActivity : AppCompatActivity() {
                 // Update the UI with the data on the main thread
                 withContext(Dispatchers.Main) {
                     viewManager = LinearLayoutManager(this@ConnectedActivity)
-                    viewAdapter = LogErrorAdapter(mediaList)
+                    viewAdapter = MyAdapter(mediaList)
 
                     recyclerView = findViewById<RecyclerView>(R.id.recyclerView).apply {
                         setHasFixedSize(true)
@@ -324,18 +298,18 @@ class ConnectedActivity : AppCompatActivity() {
         permissions: Array<String>,
         grantResults: IntArray
     ) {
-        logError("Permission", "Results: ${grantResults.toList()}")
+        Log.d("Permission", "Results: ${grantResults.toList()}")
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission was granted
                     // You can proceed with accessing the media files here
-                    logError("Permission", "Permissions Granted")
+                    Log.d("Permission", "Permissions Granted")
                 } else {
                     // Permission was denied
                     // Disable the functionality that depends on this permission
-                    logError("Permission", "Permissions Denied")
+                    Log.d("Permission", "Permissions Denied")
                 }
                 return
             }
@@ -396,12 +370,12 @@ class ConnectedActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 // Log any exceptions that may occur during scanning
-                logError("ConnectedActivity", "Error while scanning media: ${e.message}")
+                Log.e("ConnectedActivity", "Error while scanning media: ${e.message}")
             }
         }
 
         // Log the size of the mediaList
-        logError("ConnectedActivity", "Media List Size: ${mediaList.size}")
+        Log.d("ConnectedActivity", "Media List Size: ${mediaList.size}")
 
         return mediaList
     }
@@ -409,15 +383,15 @@ class ConnectedActivity : AppCompatActivity() {
 
 }
 
-class LogErrorAdapter(private val myDataset: List<Media>) :
-    RecyclerView.Adapter<LogErrorAdapter.MyViewHolder>() {
+class MyAdapter(private val myDataset: List<Media>) :
+    RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
 
     class MyViewHolder(val textView: TextView) : RecyclerView.ViewHolder(textView)
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): LogErrorAdapter.MyViewHolder {
+    ): MyAdapter.MyViewHolder {
         val textView = TextView(parent.context)
         return MyViewHolder(textView)
     }
