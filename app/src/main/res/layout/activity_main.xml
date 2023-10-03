@@ -14,7 +14,7 @@
     android:id="@+id/urlField"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:hint="https://nc.dcrypted.ca"/>
+    android:hint="https://www.nextcloud.com"/>
 
 <Button
     android:id="@+id/connectButton"
