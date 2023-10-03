@@ -4,6 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <EditText
+        android:id="@+id/deletionTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="60"/>
+
 <EditText
     android:id="@+id/urlField"
     android:layout_width="match_parent"

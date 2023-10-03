@@ -9,5 +9,6 @@ data class Media(
     val name: String,
     val size: Long,
     val data: String,
-    val date: Long
+    val date: Long,
+    val status: String
 )

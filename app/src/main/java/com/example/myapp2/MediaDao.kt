@@ -12,4 +12,7 @@ interface MediaDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAll(vararg media: Media)
+
+    @Query("SELECT COUNT(*) FROM media")
+    fun getTotalFilesCount(): Int
 }

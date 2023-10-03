@@ -32,12 +32,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_18
+        targetCompatibility = JavaVersion.VERSION_18
     }
 
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "18"
     }
     buildFeatures {
         compose = true
@@ -50,6 +50,7 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
 }
 
 
@@ -71,8 +72,12 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
 //    implementation("androidx.recyclerview:recyclerview-selection:1.2.1")
+    implementation ("com.github.nextcloud:android-library:latest.release") {
+        exclude("org.ogce","xpp3") // unused in Android and brings wrong Junit version
+    }
 
 
+//    implementation("com.github.nextcloud:android-sso:1.2.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -83,4 +88,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
     implementation("com.squareup.okhttp3:okhttp:4.9.0")
+    //implementation("com.owncloud.android.lib.common.OwnCloudClient:4.1")
+    implementation("commons-httpclient:commons-httpclient:3.1@jar") // remove after entire switch to lib v2
+
 }
